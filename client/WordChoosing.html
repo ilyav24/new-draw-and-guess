@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Word Choosing</title>
+    <link rel="stylesheet" type="text/css" media="all" href="css/drawguess.css">
+</head>
+
+<body>
+    <h1>Select a word to draw!</h1>
+    <!-- Three buttons in a group -->
+    <div class="btn-group" style="width:100%">
+        <button style="width:33.3%" id="easyButton" onclick="window.location.href='index.html'" ></button>
+        <button style="width:33.3%" id="mediumButton"></button>
+        <button style="width:33.3%" id="hardButton"></button>
+    </div>
+</body>
+
+</html>
+
+<script>
+    const easyList = ["Fork", "Cup", "Spoon", "Airplane", "Car"];
+    const mediumList =["Helicopter", "Ship", "Bicycle", "Train", "Storm"]
+    const hardList = ["Hamburger", "Dessert", "Coffee", "Uncle", "Ocean"]
+    
+    randomizeFunction()
+    
+    function randomizeFunction() {
+        document.getElementById("easyButton").innerHTML = "Easy: " + easyList[Math.floor(Math.random() * easyList.length)]
+        document.getElementById("mediumButton").innerHTML = "Medium: " + mediumList[Math.floor(Math.random() * mediumList.length)]
+        document.getElementById("hardButton").innerHTML = "Hard: " + hardList[Math.floor(Math.random() * hardList.length)]
+    }
+</script>
