@@ -1,12 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Draw & Guess</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html">
+    <title>Draw & Guess</title>
+    <!-- <link rel="stylesheet" href="css/drawguess.css"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body>
+    <div data-role="page" data-theme="a" class="container" id="one" data-title="Welcome">
         <h1>Welcome to Draw & Guess!</h1>
-        <a href="WordChoosing.html">Start Game</a>
-    </body>
+        <li><a href="#two">Start Game</a></li>
+    </div>
+
+    <div data-role="page" data-theme="b" class="container" id="two" data-title="Word Choosing">
+        <h1>Select a word to draw!</h1>
+        <!-- Three buttons in a group -->
+        <div class="btn-group" style="width:100%">
+            <button style="width:33.3%" id="easyButton" onclick="window.location.href='#three'"></button>
+            <button style="width:33.3%" id="mediumButton" onclick="window.location.href='#three'"></button>
+            <button style="width:33.3%" id="hardButton" onclick="window.location.href='#three'"></button>
+        </div>
+        <script>
+            // volcabulary to choose random words from
+            const easyList = ["Fork", "Cup", "Spoon", "Airplane", "Car"];
+            const mediumList = ["Helicopter", "Ship", "Bicycle", "Train", "Storm"]
+            const hardList = ["Hamburger", "Dessert", "Coffee", "Uncle", "Ocean"]
+
+            randomizeFunction()
+
+            function randomizeFunction() {
+                document.getElementById("easyButton").innerHTML = "Easy: " + easyList[Math.floor(Math.random() * easyList.length)]
+                document.getElementById("mediumButton").innerHTML = "Medium: " + mediumList[Math.floor(Math.random() * mediumList.length)]
+                document.getElementById("hardButton").innerHTML = "Hard: " + hardList[Math.floor(Math.random() * hardList.length)]
+            }
+        </script>
+    </div>
+
+    <div data-role="page" data-theme="c" class="container" id="three" data-title="Drawing">
+        <style>
+            body {
+                margin: 0
+            }
+        </style>
+        <div>
+            <canvas id='drawing-pad'>
+            </canvas>
+        </div>
+
+        <ul id="chat-history"></ul>
+        <input type="text" id="chat-input" autocomplete="off">
+        <input type="button" value="Send" id="send">
+        <input type="button" value="Restart" id="restart">
+    </div>
+
+    <!-- <script src="js/jquery-3.5.1.min.js"></script> -->
+    <script src="js/clientSide.js"></script>
+</body>
+
 </html>
