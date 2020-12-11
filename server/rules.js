@@ -1,3 +1,6 @@
+// constants
+var WORD_ANSWER = 0;
+
 function User(socket) {
     this.socket = socket;
 
@@ -8,6 +11,12 @@ function User(socket) {
 
 function Room() {
     this.users = [];
+
+    // the current turn of player index
+    this.playerTurn = 0;
+
+    this.currentAnswer = undefined;
+
 }
 
 Room.prototype.addUser = function (user) {
@@ -21,6 +30,12 @@ Room.prototype.addUser = function (user) {
     user.socket.onclose = function () {
         console.log('A connection left.');
         room.removeUser(user);
+    }
+
+    this.handleUserMessages(user);
+
+    if(room.users.length == 2){
+        room.startGame();
     }
 };
 
@@ -39,6 +54,33 @@ Room.prototype.sendAll = function (message) {
         this.users[i].socket.send(message);
         console.log(message);
     }
+};
+
+// receive messages from user
+Room.prototype.handleUserMessages = function(user) {
+    var room = this;
+    user.socket.on("message", function(message) {
+
+        console.log("handleUserMessage recieved: " + message);
+        
+        //construct the message
+        var data = JSON.parse(message);
+
+        // check if the data is the word that was picked to be drawn
+        if(data.dataType === WORD_ANSWER){
+            // make that word the current right answer
+            this.currentAnswer = data.message;
+        }
+    });
+};
+
+Room.prototype.startGame = function(){
+    var room = this;
+    // pick a player to draw
+    this.playerTurn = (this.playerTurn + 1) % 2;
+
+    
+
 };
 
 module.exports.User = User;
