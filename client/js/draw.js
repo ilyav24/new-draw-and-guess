@@ -2,7 +2,7 @@ window.onload = function() {
 
     document.ontouchmove = function(e){ e.preventDefault(); }
   
-    var canvas  = document.getElementById('main');
+    var canvas  = document.getElementById('drawing-pad');
     var canvastop = canvas.offsetTop
   
     var context = canvas.getContext("2d");

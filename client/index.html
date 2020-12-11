@@ -18,27 +18,46 @@
     </div>
 
     <div data-role="page" data-theme="b" class="container" id="two" data-title="Word Choosing">
+
         <h1>Select a word to draw!</h1>
+
         <!-- Three buttons in a group -->
         <div class="btn-group" style="width:100%">
-            <button style="width:33.3%" id="easyButton" onclick="window.location.href='#three'"></button>
-            <button style="width:33.3%" id="mediumButton" onclick="window.location.href='#three'"></button>
-            <button style="width:33.3%" id="hardButton" onclick="window.location.href='#three'"></button>
+            <button style="width:33.3%" id="easy-button" onclick="window.location.href='#three'"></button>
+            <button style="width:33.3%" id="medium-button" onclick="window.location.href='#three'"></button>
+            <button style="width:33.3%" id="hard-button" onclick="window.location.href='#three'"></button>
         </div>
+
         <script>
             // volcabulary to choose random words from
-            const easyList = ["Fork", "Cup", "Spoon", "Airplane", "Car"];
-            const mediumList = ["Helicopter", "Ship", "Bicycle", "Train", "Storm"]
-            const hardList = ["Hamburger", "Dessert", "Coffee", "Uncle", "Ocean"]
+            const easyList = ["FORK", "CUP", "SPOON", "AIRPLANE", "CAR"];
+            const mediumList = ["HELICOPTER", "SHIP", "BICYCLE", "TRAIN", "STROM"];
+            const hardList = ["HAMBURGER", "DESSERT", "COFFEE", "UNCLE", "OCEAN"];
+
 
             randomizeFunction()
 
             function randomizeFunction() {
-                document.getElementById("easyButton").innerHTML = "Easy: " + easyList[Math.floor(Math.random() * easyList.length)]
-                document.getElementById("mediumButton").innerHTML = "Medium: " + mediumList[Math.floor(Math.random() * mediumList.length)]
-                document.getElementById("hardButton").innerHTML = "Hard: " + hardList[Math.floor(Math.random() * hardList.length)]
+                var easyWord = easyList[Math.floor(Math.random() * easyList.length)];
+                var mediumWord = mediumList[Math.floor(Math.random() * mediumList.length)];
+                var hardWord = hardList[Math.floor(Math.random() * hardList.length)];
+
+                var easyButton = document.getElementById("easy-button");
+                var mediumButton = document.getElementById("medium-button");
+                var hardButton = document.getElementById("hard-button");
+
+                // changing button 'values' to retreive them with jQuery in clientSide.js
+                easyButton.value = easyWord;
+                mediumButton.value = mediumWord;
+                hardButton.value = hardWord;
+
+                // display random word from lists on respective button text
+                easyButton.innerHTML = "Easy: " + easyWord;
+                mediumButton.innerHTML = "Medium: " + mediumWord;
+                hardButton.innerHTML = "Hard: " + hardWord;
             }
         </script>
+
     </div>
 
     <div data-role="page" data-theme="c" class="container" id="three" data-title="Drawing">
@@ -47,10 +66,11 @@
                 margin: 0
             }
         </style>
-        <div>
-            <canvas id='drawing-pad'>
-            </canvas>
-        </div>
+
+        <canvas id='drawing-pad'>
+        </canvas>
+        <button id="clear">clear</button>
+
 
         <ul id="chat-history"></ul>
         <input type="text" id="chat-input" autocomplete="off">

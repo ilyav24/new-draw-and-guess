@@ -30,6 +30,12 @@ $(function (){
             console.log("onmessage event: ",e.data);
             $("#chat-history").append("<li>"  + e.data + "</li>");
         }
+
+        //get selected word
+        $("#easy-button").on("click",function(){
+            var text=$(this).attr('value');
+            $("#chat-history").append("<li> Please draw the word: "  + text + "</li>");
+        });
         
     }
 })
