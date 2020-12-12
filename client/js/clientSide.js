@@ -42,12 +42,12 @@ $(function () {
             
 
             // show waiting until two player connect screen
-            if (data.gameState === websocketGame.WAITING_TO_START) {
-                //show loader
-                console.log("Waiting to start firing")
-                $.mobile.showPageLoadingMsg(); 
+            // if (data.gameState === websocketGame.WAITING_TO_START) {
+            //     //show loader
+            //     console.log("Waiting to start firing")
+            //     $.mobile.showPageLoadingMsg(); 
                 
-            }
+            // }
 
             // when both players connected
             if(data.gameState === websocketGame.GAME_START){
