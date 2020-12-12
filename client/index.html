@@ -14,7 +14,7 @@
 <body>
     <div data-role="page" data-theme="a" class="container" id="one" data-title="Welcome">
         <h1>Welcome to Draw & Guess!</h1>
-        <li><a href="#two">Start Game</a></li>
+        <li><a href="#four">Start Game</a></li>
     </div>
 
     <div data-role="page" data-theme="b" class="container" id="two" data-title="Word Choosing">
@@ -62,12 +62,41 @@
 
     <div data-role="page" data-theme="c" class="container" id="three" data-title="Drawing">
         <style>
-            body {
-                margin: 0
+            /* Some CSS styling */
+            #sketchpadapp {
+                /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+
+            #sketchpad {
+                float: left;
+                border: 2px solid #888;
+                border-radius: 4px;
+                position: relative;
+                /* Necessary for correct mouse co-ords in Firefox */
             }
         </style>
 
-        <canvas id='drawing-pad'>
+
+        <div id="sketchpadapp">
+            <div class="leftside1">
+
+
+                <input type="submit" value="Clear Sketchpad" onclick="clearCanvas(canvas,ctx);">
+            </div>
+            <div class="rightside">
+                <canvas id="sketchpad" height="300" width="400">
+                </canvas>
+            </div>
+        </div>
+
+        <!-- <canvas id='drawing-pad'>
         </canvas>
         <button id="clear">clear</button>
 
@@ -75,11 +104,15 @@
         <ul id="chat-history"></ul>
         <input type="text" id="chat-input" autocomplete="off">
         <input type="button" value="Send" id="send">
-        <input type="button" value="Restart" id="restart">
+        <input type="button" value="Restart" id="restart"> -->
     </div>
 
-    <!-- <script src="js/jquery-3.5.1.min.js"></script> -->
-    <script src="js/clientSide.js"></script>
+    <div data-role="page" data-theme="d" class="container" id="four" data-title="Waiting">
+        <h1>Waiting for other player</h1>
+    </div> 
+
+        <script src="js/draw.js"></script>
+        <script src="js/clientSide.js"></script>
 </body>
 
 </html>

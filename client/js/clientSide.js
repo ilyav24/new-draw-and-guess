@@ -1,6 +1,13 @@
 websocketGame = {
+
     // constants
-    WORD_ANSWER : 0
+    WORD_ANSWER: 0,
+
+    // game logic constants
+    WAITING_TO_START: 0,
+    GAME_START: 1,
+    GAME_OVER: 2,
+    GAME_RESTART: 3
 }
 
 // canvas context
@@ -28,7 +35,29 @@ $(function () {
         // handle message events
         websocketGame.socket.onmessage = function (e) {
             console.log("onmessage event: ", e.data);
-            $("#chat-history").append("<li>" + e.data + "</li>");
+            
+
+            var data = JSON.parse(e.data);
+
+            
+
+            // show waiting until two player connect screen
+            if (data.gameState === websocketGame.WAITING_TO_START) {
+                //show loader
+                console.log("Waiting to start firing")
+                $.mobile.showPageLoadingMsg(); 
+                
+            }
+
+            // when both players connected
+            if(data.gameState === websocketGame.GAME_START){
+
+                // show the drawer his screen
+                if(data.isPlayerTurn){
+                    window.location.href = '#two';
+                    $("#chat-history").append("<li>" + data.message + "</li>");
+                }
+            }
         }
 
         //get selected word
@@ -42,6 +71,7 @@ $(function () {
 
             console.log("sending: " + text)
             websocketGame.socket.send(JSON.stringify(data));
+
         });
 
     }
