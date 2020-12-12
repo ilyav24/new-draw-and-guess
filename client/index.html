@@ -60,7 +60,9 @@
 
     </div>
 
-    <div data-role="page" data-theme="c" class="container" id="three" data-title="Drawing">
+    <div data-role="page" class="container" id="three" data-title="Drawing">
+
+
         <style>
             /* Some CSS styling */
             #sketchpadapp {
@@ -91,7 +93,7 @@
                 <input type="submit" value="Clear Sketchpad" onclick="clearCanvas(canvas,ctx);">
             </div>
             <div class="rightside">
-                <canvas id="sketchpad" height="300" width="400">
+                <canvas id="sig-canvas" height="300" width="400">
                 </canvas>
             </div>
         </div>
@@ -109,10 +111,10 @@
 
     <div data-role="page" data-theme="d" class="container" id="four" data-title="Waiting">
         <h1>Waiting for other player</h1>
-    </div> 
+    </div>
 
-        <script src="js/draw.js"></script>
-        <script src="js/clientSide.js"></script>
+    <script src="js/draw.js"></script>
+    <script src="js/clientSide.js"></script>
 </body>
 
 </html>

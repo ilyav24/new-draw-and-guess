@@ -1,81 +1,94 @@
-// Variables for referencing the canvas and 2dcanvas context
-var canvas,ctx;
+// Set up the canvas
+var canvas = document.getElementById("sig-canvas");
+var ctx = canvas.getContext("2d");
+ctx.strokeStyle = "#222222";
+ctx.lineWith = 2;
 
-// Variables to keep track of the mouse position and left-button status 
-var mouseX,mouseY,mouseDown=0;
+// Set up mouse events for drawing
+var drawing = false;
+var mousePos = { x:0, y:0 };
+var lastPos = mousePos;
+canvas.addEventListener("mousedown", function (e) {
+        drawing = true;
+  lastPos = getMousePos(canvas, e);
+}, false);
+canvas.addEventListener("mouseup", function (e) {
+  drawing = false;
+}, false);
+canvas.addEventListener("mousemove", function (e) {
+  mousePos = getMousePos(canvas, e);
+}, false);
 
-// Draws a dot at a specific position on the supplied canvas name
-// Parameters are: A canvas context, the x position, the y position, the size of the dot
-function drawDot(ctx,x,y,size) {
-    // Let's use black by setting RGB values to 0, and 255 alpha (completely opaque)
-    r=0; g=0; b=0; a=255;
+// Get the position of the mouse relative to the canvas
+function getMousePos(canvasDom, mouseEvent) {
+  var rect = canvasDom.getBoundingClientRect();
+  return {
+    x: mouseEvent.clientX - rect.left,
+    y: mouseEvent.clientY - rect.top
+  };
+}
 
-    // Select a fill style
-    ctx.fillStyle = "rgba("+r+","+g+","+b+","+(a/255)+")";
+// Get a regular interval for drawing to the screen
+window.requestAnimFrame = (function (callback) {
+  return window.requestAnimationFrame || 
+     window.webkitRequestAnimationFrame ||
+     window.mozRequestAnimationFrame ||
+     window.oRequestAnimationFrame ||
+     window.msRequestAnimaitonFrame ||
+     function (callback) {
+  window.setTimeout(callback, 1000/60);
+     };
+})();
 
-    // Draw a filled circle
-    ctx.beginPath();
-    ctx.arc(x, y, size, 0, Math.PI*2, true); 
-    ctx.closePath();
-    ctx.fill();
-} 
+// Draw to the canvas
+function renderCanvas() {
+  if (drawing) {
+    ctx.moveTo(lastPos.x, lastPos.y);
+    ctx.lineTo(mousePos.x, mousePos.y);
+    ctx.stroke();
+    lastPos = mousePos;
+  }
+}
+
+// Allow for animation
+(function drawLoop () {
+  requestAnimFrame(drawLoop);
+  renderCanvas();
+})();
+
+// Set up touch events for mobile, etc
+canvas.addEventListener("touchstart", function (e) {
+  mousePos = getTouchPos(canvas, e);
+var touch = e.touches[0];
+var mouseEvent = new MouseEvent("mousedown", {
+clientX: touch.clientX,
+clientY: touch.clientY
+});
+canvas.dispatchEvent(mouseEvent);
+}, false);
+canvas.addEventListener("touchend", function (e) {
+var mouseEvent = new MouseEvent("mouseup", {});
+canvas.dispatchEvent(mouseEvent);
+}, false);
+canvas.addEventListener("touchmove", function (e) {
+var touch = e.touches[0];
+var mouseEvent = new MouseEvent("mousemove", {
+clientX: touch.clientX,
+clientY: touch.clientY
+});
+canvas.dispatchEvent(mouseEvent);
+}, false);
+
+// Get the position of a touch relative to the canvas
+function getTouchPos(canvasDom, touchEvent) {
+var rect = canvasDom.getBoundingClientRect();
+return {
+x: touchEvent.touches[0].clientX - rect.left,
+y: touchEvent.touches[0].clientY - rect.top
+};
+}
 
 // Clear the canvas context using the canvas width and height
 function clearCanvas(canvas,ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-// Keep track of the mouse button being pressed and draw a dot at current location
-function sketchpad_mouseDown() {
-    mouseDown=1;
-    drawDot(ctx,mouseX,mouseY,12);
-}
-
-// Keep track of the mouse button being released
-function sketchpad_mouseUp() {
-    mouseDown=0;
-}
-
-// Keep track of the mouse position and draw a dot if mouse button is currently pressed
-function sketchpad_mouseMove(e) { 
-    // Update the mouse co-ordinates when moved
-    getMousePos(e);
-
-    // Draw a dot if the mouse button is currently being pressed
-    if (mouseDown==1) {
-        drawDot(ctx,mouseX,mouseY,12);
-    }
-}
-
-// Get the current mouse position relative to the top-left of the canvas
-function getMousePos(e) {
-    if (!e)
-        var e = event;
-
-    if (e.offsetX) {
-        mouseX = e.offsetX;
-        mouseY = e.offsetY;
-    }
-    else if (e.layerX) {
-        mouseX = e.layerX;
-        mouseY = e.layerY;
-    }
- }
-
-
-// Set-up the canvas and add our event handlers after the page has loaded
-function init() {
-    // Get the specific canvas element from the HTML document
-    canvas = document.getElementById('sketchpad');
-
-    // If the browser supports the canvas tag, get the 2d drawing context for this canvas
-    if (canvas.getContext)
-        ctx = canvas.getContext('2d');
-
-    // Check that we have a valid context to draw on/with before adding event handlers
-    if (ctx) {
-        canvas.addEventListener('touchstart', sketchpad_mouseDown, false);
-        canvas.addEventListener('touchmove', sketchpad_mouseMove, false);
-        window.addEventListener('touchend', sketchpad_mouseUp, false);
-    }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
