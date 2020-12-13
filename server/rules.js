@@ -1,11 +1,14 @@
+
+
 // constants
 var WORD_ANSWER = 0;
+var CHAT_MESSAGE = 1;
 var GAME_LOGIC = 2;
 
 // game logic constants
 var WAITING_TO_START = 0;
 var GAME_START = 1;
-var GAME_OVER = 2;
+var GUESSING = 2;
 var GAME_RESTART = 3;
 
 function User(socket) {
@@ -108,7 +111,7 @@ GameRoom.prototype.addUser = function (user) {
         this.startGame();
 }
 
-GameRoom.prototype.handleOnUserMessage = function (user) {
+GameRoom.prototype.handleUserMessages = function (user) {
     var room = this;
     // gandle on message
     user.socket.on('message', function (message) {
@@ -116,7 +119,7 @@ GameRoom.prototype.handleOnUserMessage = function (user) {
         console.log("[GameRoom] Received message: " + message);
 
         var data = JSON.parse(message);
-        
+
 
         // check if the message is guessing right or wrong
         if (data.dataType === CHAT_MESSAGE) {
@@ -130,8 +133,8 @@ GameRoom.prototype.handleOnUserMessage = function (user) {
             if (room.currentGameState === GAME_START && data.message === room.currentAnswer) {
                 var gameLogicData = {
                     dataType: GAME_LOGIC,
-                    gameState: GAME_OVER,
-                    winner: user.id,
+                    //gameState: GAME_OVER,
+                    //winner: user.id,
                     answer: room.currentAnswer
                 };
 
@@ -139,27 +142,43 @@ GameRoom.prototype.handleOnUserMessage = function (user) {
 
                 room.currentGameState = WAITING_TO_START;
 
-                
+
             }
         }
 
-        if (data.dataType === GAME_LOGIC && data.gameState === GAME_RESTART) {
-            room.startGame(data.message);
+        
+        if (data.dataType === GAME_LOGIC) {
+
+            // check if its time to guess the drawing
+            if(data.gameState === GUESSING){
+                var guessingPlayer=room.users[(room.playerTurn + 1) % 2];
+
+                // datatype: game logic, gamestate: guessing, and video of the drawing
+                guessingPlayer.socket.send(JSON.stringify(data));
+            }
+
+            // check if player is done guessing
+            if (data.gameState === GAME_RESTART) {
+                room.startGame(data.message);
+            }
+
         }
+
+
 
     });
 };
 
 GameRoom.prototype.startGame = function () {
-    var room = this;
+
     // pick a player to draw
     this.playerTurn = (this.playerTurn + 1) % 2;
 
     // game start for all players
-    var gameLogicForEveryone ={
+    var gameLogicForEveryone = {
         dataType: GAME_LOGIC,
         gameState: GAME_START,
-        isPlayerTurn: false
+        isPlayerTurn: false,
     }
 
     this.sendAll(JSON.stringify(gameLogicForEveryone));
@@ -175,6 +194,6 @@ GameRoom.prototype.startGame = function () {
     player.socket.send(JSON.stringify(gameLogicForDrawer));
 };
 
-module.exports.GameRoom= GameRoom;
+module.exports.GameRoom = GameRoom;
 module.exports.User = User;
 module.exports.Room = Room;
