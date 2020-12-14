@@ -50,13 +50,7 @@ $(function () {
             console.log("onmessage event: ", e.data);
             var data = JSON.parse(e.data);
 
-            // show waiting until two player connect screen
-            // if (data.gameState === websocketGame.WAITING_TO_START) {
-            //     //show loader
-            //     console.log("Waiting to start firing")
-            //     $.mobile.showPageLoadingMsg(); 
-
-            // }
+            
 
             if (data.dataType === websocketGame.CHAT_MESSAGE) {
 
@@ -118,17 +112,9 @@ $(function () {
                     $('.guess').show();
                     $('#chat-input').show();
 
-
-                    
+                    //create image of last drawing
                     img.src=data.video;
-                    
                     src.appendChild(img);
-
-                    //image for displaying the drawing
-                    // var myImage = new Image();
-                    // myImage.src = data.video;
-                    // console.log(myImage);
-                    // myImage.onLoad=function(){ctx.drawImage(myImage, 0, 0);}
                 }
             }
         }
@@ -180,32 +166,6 @@ $(function () {
             console.log("sending: " + text)
             websocketGame.socket.send(JSON.stringify(difficultyData));
         });
-
-
-        // Get the stream
-        // var videoStream = canvas.captureStream(30); // 25 FPS
-        // var mediaRecorder = new MediaRecorder(videoStream);
-        // var chunks = [];
-        // mediaRecorder.ondataavailable = function (e) {
-        //     chunks.push(e.data);
-        // };
-        // mediaRecorder.start();
-        // mediaRecorder.onstop = function (e) {
-
-        //     var blob = new Blob(chunks, { 'type': 'video/mp4' });
-
-        //     console.log("chunks data: " + chunks)
-
-        //     chunks = [];
-        //     var data = {
-        //         dataType: websocketGame.GAME_LOGIC,
-        //         gameState: websocketGame.GUESSING,
-        //         video: chunks
-        //     }
-        //     // send video stream of drawing
-        //     websocketGame.socket.send(blob)
-
-        // };
 
         // handle sending the drawing from the drawer
         $('#send').on("click", function () {

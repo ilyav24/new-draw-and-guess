@@ -12,10 +12,6 @@ var GAME_OVER = 4;
 
 function User(socket) {
     this.socket = socket;
-
-    //assign id,  either 1 or 2
-    //users.length==0 ? this.id=1 : this.id=2;
-
 }
 
 function Room() {
