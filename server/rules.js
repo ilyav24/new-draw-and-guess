@@ -77,6 +77,13 @@ Room.prototype.handleUserMessages = function (user) {
 };
 
 function GameRoom() {
+
+    // current score of the gameRoom
+    this.currentScore = 0;
+
+    // potential score based on chosen difficulty
+    this.potentialScore = 0;
+
     // the current turn of player index
     this.playerTurn = 0;
 
@@ -117,8 +124,12 @@ GameRoom.prototype.handleUserMessages = function (user) {
 
         // check if the data is the word that was picked to be drawn
         if (data.dataType === WORD_ANSWER) {
+
             // make that word the current right answer
             room.currentAnswer = data.message;
+
+            // adjust potential score
+            room.potentialScore = data.difficulty;
         }
 
         // check if the message is guessing right or wrong
@@ -131,13 +142,18 @@ GameRoom.prototype.handleUserMessages = function (user) {
             }
 
             if (room.currentGameState === GAME_START && data.message.toLowerCase() === room.currentAnswer.toLowerCase()) {
+
+                console.log("incrementing by " + room.potentialScore);
+                //raises score based on difficulty
+                room.currentScore += room.potentialScore;
+                console.log("now score is " + room.currentScore);
+
                 var gameLogicData = {
                     dataType: GAME_LOGIC,
                     gameState: GAME_OVER,
-                    //winner: user.id,
+                    updatedScore: room.currentScore,
                     answer: room.currentAnswer
                 };
-
                 room.sendAll(JSON.stringify(gameLogicData));
                 room.currentGameState = WAITING_TO_START;
             }
@@ -189,8 +205,10 @@ GameRoom.prototype.startGame = function () {
 
     var player = this.users[this.playerTurn];
     player.socket.send(JSON.stringify(gameLogicForDrawer));
-    
+
 };
+
+
 
 module.exports.GameRoom = GameRoom;
 module.exports.User = User;

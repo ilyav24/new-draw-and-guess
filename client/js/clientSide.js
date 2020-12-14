@@ -16,6 +16,7 @@ websocketGame = {
     GAME_OVER: 4,
 }
 
+
 //var video = document.getElementById("video");
 // canvas context
 var canvas = document.getElementById("sig-canvas");
@@ -62,15 +63,18 @@ $(function () {
                 // when the right word has been guessed and restart for another round
                 if (data.gameState === websocketGame.GAME_OVER) {
                     if (!websocketGame.isTurnToDraw) {
-                        $("<div>You guessed it! The right word was " + data.answer + "</div>").dialog();
-                        var data = {
+                        alert("You guessed it! The right word was " + data.answer);
+
+                        var restartRequest = {
                             dataType: websocketGame.GAME_LOGIC,
                             gameState: websocketGame.GAME_RESTART
                         }
                         $("#chat-history").html("");
-                        websocketGame.socket.send(JSON.stringify(data));
-                    }
 
+                        // update html component to current score
+                        $('#score').text(data.updatedScore);
+                        websocketGame.socket.send(JSON.stringify(restartRequest));
+                    }
                 }
 
                 // when both players connected
@@ -87,7 +91,7 @@ $(function () {
                         $('.draw').show();
                         $('.guess').hide();
                         $('#chat-input').hide();
-                        
+
                     }
                     // put guesser on hold until drawer send drawing
                     else {
@@ -106,25 +110,56 @@ $(function () {
                     $('.draw').hide();
                     $('.guess').show();
                     $('#chat-input').show();
-                    
+
                     //ctx.drawImage(data.video, 5, 5);
 
                 }
             }
         }
 
-        //get selected word
+        //get selected easy word
         $("#easy-button").on("click", function () {
             // get name of word from value attribute
             var text = $(this).attr('value');
             $("#chat-history").append("<li> Please draw the word: " + text + "</li>");
-            var data = {
+            var difficultyData = {
                 dataType: websocketGame.WORD_ANSWER,
+                difficulty: 1,
                 message: text
             }
 
             console.log("sending: " + text)
-            websocketGame.socket.send(JSON.stringify(data));
+            websocketGame.socket.send(JSON.stringify(difficultyData));
+        });
+
+         //get selected medium word
+         $("#medium-button").on("click", function () {
+            // get name of word from value attribute
+            var text = $(this).attr('value');
+            $("#chat-history").append("<li> Please draw the word: " + text + "</li>");
+            var difficultyData = {
+                dataType: websocketGame.WORD_ANSWER,
+                difficulty: 3,
+                message: text
+            }
+
+            console.log("sending: " + text)
+            websocketGame.socket.send(JSON.stringify(difficultyData));
+        });
+
+         //get selected hard word
+         $("#hard-button").on("click", function () {
+            // get name of word from value attribute
+            var text = $(this).attr('value');
+            $("#chat-history").append("<li> Please draw the word: " + text + "</li>");
+            var difficultyData = {
+                dataType: websocketGame.WORD_ANSWER,
+                difficulty: 5,
+                message: text
+            }
+
+            console.log("sending: " + text)
+            websocketGame.socket.send(JSON.stringify(difficultyData));
         });
 
 
@@ -160,13 +195,13 @@ $(function () {
             // go to waiting page
             window.location.href = '#four';
 
-            var data = {
+            var drawingData = {
                 dataType: websocketGame.GAME_LOGIC,
                 gameState: websocketGame.GUESSING,
                 video: canvas.toDataURL(),
             }
             // send video stream of drawing
-            websocketGame.socket.send(JSON.stringify(data));
+            websocketGame.socket.send(JSON.stringify(drawingData));
         });
 
         $("#send-guess").on("click", sendMessage);
@@ -181,13 +216,14 @@ $(function () {
             var message = $("#chat-input").val();
             $("#chat-history").append("<li> You guessed: " + message + "</li>");
             // pack the message into an object
-            var data = {};
-            data.dataType = websocketGame.CHAT_MESSAGE;
-            data.message = message;
-
+            var wordGuessedData = {};
+            wordGuessedData.dataType = websocketGame.CHAT_MESSAGE;
+            wordGuessedData.message = message;
             $("#chat-input").val("");
-            websocketGame.socket.send(JSON.stringify(data));
+            websocketGame.socket.send(JSON.stringify(wordGuessedData));
 
         }
+
+
     }
 })
