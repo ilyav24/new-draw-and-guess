@@ -1,4 +1,4 @@
-# new-draw-and-guess
+# Draw & Guess
 
 Draw & Guess game.
 
