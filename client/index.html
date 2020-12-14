@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html">
+    <title>Draw & Guess</title>
+    <link rel="stylesheet" href="css/drawguess.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body>
+    
+    <div data-role="page" class="container" id="one" data-title="Welcome">
+        <h1>Welcome to Draw & Guess!</h1>
+        <li><a href="#four">Start Game</a></li>
+        <div class="contains-container">
+            <div id="hud-item">
+                <p class="hud-prefix">
+                    Score
+                </p>
+                <h1 class="hud-main-text" id="score">
+                    0
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div data-role="page" class="container" id="two" data-title="Word Choosing">
+
+        <h1>Select a word to draw!</h1>
+
+        <!-- Three buttons in a group -->
+        <div class="btn-group" style="width:100%">
+            <button id="easy-button" onclick=" window.location.href='#three'"></button>
+            <button id="medium-button" onclick="window.location.href='#three'"></button>
+            <button id="hard-button" onclick="window.location.href='#three'"></button>
+        </div>
+        <div class="contains-container">
+            <div id="hud-item">
+                <p class="hud-prefix">
+                    Score
+                </p>
+                <h1 class="hud-main-text" id="score">
+                    0
+                </h1>
+            </div>
+        </div>
+
+        <script>
+            // volcabulary to choose random words from
+            const easyList = ["FORK", "CUP", "SPOON", "AIRPLANE", "CAR"];
+            const mediumList = ["HELICOPTER", "SHIP", "BICYCLE", "TRAIN", "STORM"];
+            const hardList = ["HAMBURGER", "DESSERT", "COFFEE", "UNCLE", "OCEAN"];
+
+
+            randomizeFunction()
+
+            function randomizeFunction() {
+                var easyWord = easyList[Math.floor(Math.random() * easyList.length)];
+                var mediumWord = mediumList[Math.floor(Math.random() * mediumList.length)];
+                var hardWord = hardList[Math.floor(Math.random() * hardList.length)];
+
+                var easyButton = document.getElementById("easy-button");
+                var mediumButton = document.getElementById("medium-button");
+                var hardButton = document.getElementById("hard-button");
+
+                // changing button 'values' to retreive them with jQuery in clientSide.js
+                easyButton.value = easyWord;
+                mediumButton.value = mediumWord;
+                hardButton.value = hardWord;
+
+                // display random word from lists on respective button text
+                easyButton.innerHTML = "Easy: " + easyWord;
+                mediumButton.innerHTML = "Medium: " + mediumWord;
+                hardButton.innerHTML = "Hard: " + hardWord;
+            }
+        </script>
+    </div>
+
+    <div data-role="page" class="container" id="three" data-title="Drawing">
+
+        <style>
+            /* Some CSS styling */
+            #sketchpadapp {
+                /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            #sketchpad {
+                float: left;
+                border: 2px solid #888;
+                border-radius: 4px;
+                position: relative;
+            }
+        </style>
+        <div id="sketchpadapp">
+            <div class="draw">
+                <input type="submit" value="Clear Sketchpad" onclick="clearCanvas(canvas,ctx);" id="clear-sketchpad">
+            </div>
+            <div id="header" class="guess"></div>
+            <div class="draw">
+                <!-- <img hidden id="video" ></img> -->
+                <canvas id="sig-canvas" height="300" width="400"></canvas>
+            </div class="guess">
+            <input type="text" id="chat-input" autocomplete="off">
+            <div>
+                <ul id="chat-history"></ul>
+            </div>
+            <div class="draw">
+                <input type="button" value="Send" id="send">
+            </div>
+            <div class="guess">
+
+                <input type="button" value="Send" id="send-guess">
+            </div>
+            <div class="contains-container">
+                <div id="hud-item">
+                    <p class="hud-prefix">
+                        Score
+                    </p>
+                    <h1 class="hud-main-text" id="score">
+                        0
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <!-- <canvas id='drawing-pad'>
+        </canvas>
+        <button id="clear">clear</button>
+        <input type="button" value="Restart" id="restart"> -->
+    </div>
+
+    <div data-role="page" class="container" id="four" data-title="Waiting">
+        <h1>Waiting for other player</h1>
+    </div>
+
+    <script src="js/draw.js"></script>
+    <script src="js/clientSide.js"></script>
+
+
+</body>
+
+</html>
