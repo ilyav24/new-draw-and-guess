@@ -5,7 +5,7 @@
   
   * {
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Cabin Sketch', arial, serif;
     margin: 0;
     padding: 0;
     color: #333;
@@ -142,4 +142,9 @@
   .hud-main-text {
     text-align: center;
   }
+
+  #chat-history li {
+	border-bottom: 1px dashed rgba(20,20,20,.2);
+	margin: 10px 0;
+}
 
