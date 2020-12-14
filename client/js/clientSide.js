@@ -83,11 +83,11 @@ $(function () {
                     if (data.isPlayerTurn) {
                         websocketGame.isTurnToDraw = true;
                         window.location.href = '#two';
-                        $('#sig-canvas').show()
-                        $('send-guess').hide();
+                        // display drawing screen
+                        $('.draw').show();
+                        $('.guess').hide();
                         $('#chat-input').hide();
-                        $('#send').show()
-                        $('#clear-sketchpad').show();
+                        
                     }
                     // put guesser on hold until drawer send drawing
                     else {
@@ -101,20 +101,12 @@ $(function () {
                 if (data.gameState === websocketGame.GUESSING && !data.isPlayerTurn) {
                     // goes to canvas page and displays video of the other player drawing
                     window.location.href = '#three';
-
                     $("#chat-history").append("<li> Please guess the drawn word </li>");
-                    $('#sig-canvas').hide()
-                    $('#video').src = data.video;
+                    // display guessing screen
+                    $('.draw').hide();
+                    $('.guess').show();
                     $('#chat-input').show();
-                    $('#video').show();
-                    // hides send drawing button and replaces with send message to chat
-                    $('#send').hide();
-                    $('#send-guess').show();
-                    $('#clear-sketchpad').hide();
-
-
-
-
+                    
                     //ctx.drawImage(data.video, 5, 5);
 
                 }
@@ -195,7 +187,7 @@ $(function () {
 
             $("#chat-input").val("");
             websocketGame.socket.send(JSON.stringify(data));
-            
+
         }
     }
 })

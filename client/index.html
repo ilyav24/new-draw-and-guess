@@ -86,22 +86,22 @@
 
 
         <div id="sketchpadapp">
-            <div class="leftside1">
-
-
+            <div class="draw">
                 <input type="submit" value="Clear Sketchpad" onclick="clearCanvas(canvas,ctx);" id="clear-sketchpad">
             </div>
-            <div class="rightside">
-                <img hidden id="video" ></img>
-                <canvas id="sig-canvas" height="300" width="400">
-                </canvas>
-            </div>
+            <div class="draw">
+                <!-- <img hidden id="video" ></img> -->
+                <canvas id="sig-canvas" height="300" width="400"></canvas>
+            </div class="guess">
             <input type="text" id="chat-input" autocomplete="off">
             <div>
                 <ul id="chat-history"></ul>
             </div>
-            <div>
+            <div class="draw">
                 <input type="button" value="Send" id="send">
+            </div>
+            <div class="guess">
+                
                 <input type="button" value="Send" id="send-guess">
             </div>
         </div>
