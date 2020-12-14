@@ -21,18 +21,18 @@
               0
             </h1>
           </div>
-        <div data-role="page" data-theme="a" class="container" id="one" data-title="Welcome">
+        <div data-role="page" class="container" id="one" data-title="Welcome">
             <h1>Welcome to Draw & Guess!</h1>
             <li><a href="#four">Start Game</a></li>
         </div>
 
-        <div data-role="page" data-theme="b" class="container" id="two" data-title="Word Choosing">
+        <div data-role="page" class="container" id="two" data-title="Word Choosing">
 
             <h1>Select a word to draw!</h1>
 
             <!-- Three buttons in a group -->
             <div class="btn-group" style="width:100%">
-                <button style="width:33.3%" id="easy-button" onclick="window.location.href='#three'"></button>
+                <button style="width:33.3%" id="easy-button" onclick=" window.location.href='#three'"></button>
                 <button style="width:33.3%" id="medium-button" onclick="window.location.href='#three'"></button>
                 <button style="width:33.3%" id="hard-button" onclick="window.location.href='#three'"></button>
             </div>
@@ -40,7 +40,7 @@
             <script>
                 // volcabulary to choose random words from
                 const easyList = ["FORK", "CUP", "SPOON", "AIRPLANE", "CAR"];
-                const mediumList = ["HELICOPTER", "SHIP", "BICYCLE", "TRAIN", "STROM"];
+                const mediumList = ["HELICOPTER", "SHIP", "BICYCLE", "TRAIN", "STORM"];
                 const hardList = ["HAMBURGER", "DESSERT", "COFFEE", "UNCLE", "OCEAN"];
 
 
@@ -94,6 +94,7 @@
                     <input type="submit" value="Clear Sketchpad" onclick="clearCanvas(canvas,ctx);"
                         id="clear-sketchpad">
                 </div>
+                <div id="header" class="guess"></div>
                 <div class="draw">
                     <!-- <img hidden id="video" ></img> -->
                     <canvas id="sig-canvas" height="300" width="400"></canvas>
@@ -116,7 +117,7 @@
         <input type="button" value="Restart" id="restart"> -->
         </div>
 
-        <div data-role="page" data-theme="d" class="container" id="four" data-title="Waiting">
+        <div data-role="page" class="container" id="four" data-title="Waiting">
             <h1>Waiting for other player</h1>
         </div>
 

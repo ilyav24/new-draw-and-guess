@@ -21,6 +21,10 @@ websocketGame = {
 // canvas context
 var canvas = document.getElementById("sig-canvas");
 var ctx = canvas.getContext('2d');
+var img = document.createElement("img");
+var src = document.getElementById("header");
+
+
 
 // initialize script when DOM is ready
 $(function () {
@@ -70,11 +74,13 @@ $(function () {
                             gameState: websocketGame.GAME_RESTART
                         }
                         $("#chat-history").html("");
+                        
 
                         // update html component to current score
                         $('#score').text(data.updatedScore);
                         websocketGame.socket.send(JSON.stringify(restartRequest));
                     }
+                    
                 }
 
                 // when both players connected
@@ -102,7 +108,7 @@ $(function () {
                 }
 
                 // user checks if its his turn to guess
-                if (data.gameState === websocketGame.GUESSING && !data.isPlayerTurn) {
+                if (data.gameState === websocketGame.GUESSING) {
                     // goes to canvas page and displays video of the other player drawing
                     window.location.href = '#three';
                     $("#chat-history").append("<li> Please guess the drawn word </li>");
@@ -111,8 +117,17 @@ $(function () {
                     $('.guess').show();
                     $('#chat-input').show();
 
-                    //ctx.drawImage(data.video, 5, 5);
 
+                    
+                    img.src=data.video;
+                    
+                    src.appendChild(img);
+
+                    //image for displaying the drawing
+                    // var myImage = new Image();
+                    // myImage.src = data.video;
+                    // console.log(myImage);
+                    // myImage.onLoad=function(){ctx.drawImage(myImage, 0, 0);}
                 }
             }
         }
@@ -127,13 +142,14 @@ $(function () {
                 difficulty: 1,
                 message: text
             }
-
+            // randomize the word choosing after 2 second so the user wont see
+            setTimeout(function(){randomizeFunction()}, 2000)
             console.log("sending: " + text)
             websocketGame.socket.send(JSON.stringify(difficultyData));
         });
 
-         //get selected medium word
-         $("#medium-button").on("click", function () {
+        //get selected medium word
+        $("#medium-button").on("click", function () {
             // get name of word from value attribute
             var text = $(this).attr('value');
             $("#chat-history").append("<li> Please draw the word: " + text + "</li>");
@@ -142,13 +158,14 @@ $(function () {
                 difficulty: 3,
                 message: text
             }
-
+            // randomize the word choosing after 2 second so the user wont see
+            setTimeout(function(){randomizeFunction()}, 2000)
             console.log("sending: " + text)
             websocketGame.socket.send(JSON.stringify(difficultyData));
         });
 
-         //get selected hard word
-         $("#hard-button").on("click", function () {
+        //get selected hard word
+        $("#hard-button").on("click", function () {
             // get name of word from value attribute
             var text = $(this).attr('value');
             $("#chat-history").append("<li> Please draw the word: " + text + "</li>");
@@ -157,7 +174,8 @@ $(function () {
                 difficulty: 5,
                 message: text
             }
-
+            // randomize the word choosing after 2 second so the user wont see
+            setTimeout(function(){randomizeFunction()}, 2000)
             console.log("sending: " + text)
             websocketGame.socket.send(JSON.stringify(difficultyData));
         });
@@ -188,20 +206,24 @@ $(function () {
 
         // };
 
+        // handle sending the drawing from the drawer
         $('#send').on("click", function () {
             //mediaRecorder.stop();
+            var imgData = canvas.toDataURL();
             // clear the canvas
             canvas.width = canvas.width;
             // go to waiting page
-            window.location.href = '#four';
-
+            
+            
             var drawingData = {
                 dataType: websocketGame.GAME_LOGIC,
                 gameState: websocketGame.GUESSING,
-                video: canvas.toDataURL(),
+                video: imgData,
             }
             // send video stream of drawing
             websocketGame.socket.send(JSON.stringify(drawingData));
+            console.log(imgData)
+            window.location.href = '#four';
         });
 
         $("#send-guess").on("click", sendMessage);
@@ -213,7 +235,7 @@ $(function () {
         });
 
         function sendMessage() {
-            var message = $("#chat-input").val();
+            var message = $("#chat-input").val() || "Nothing";
             $("#chat-history").append("<li> You guessed: " + message + "</li>");
             // pack the message into an object
             var wordGuessedData = {};
@@ -223,6 +245,8 @@ $(function () {
             websocketGame.socket.send(JSON.stringify(wordGuessedData));
 
         }
+
+        
 
 
     }
