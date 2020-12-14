@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-# new-draw-and-guess
-=======
+
 # Draw & Guess
 
 Draw & Guess game.
@@ -19,4 +17,3 @@ Enjoy!
 
 
 Used Websockets, jQuery, JS, HTML, CSS.
->>>>>>> master
