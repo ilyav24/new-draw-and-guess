@@ -77,9 +77,10 @@ $(function () {
                         
 
                         // update html component to current score
-                        $('#score').text(data.updatedScore);
+                        
                         websocketGame.socket.send(JSON.stringify(restartRequest));
                     }
+                    $('.hud-main-text').text(data.updatedScore);
                     
                 }
 
