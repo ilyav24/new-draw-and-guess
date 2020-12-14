@@ -16,4 +16,4 @@ Open index.html twice in your browser - one tab for each client.
 Enjoy!
 
 
-Used Websockets, jQuery, JS, HTML, CSS.
+Used Websockets, jQuery, NodeJS, JS, HTML, CSS.
