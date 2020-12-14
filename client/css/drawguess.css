@@ -1,6 +1,6 @@
 :root {
     background-color: #ecf5ff;
-    font-size: 62.5%;
+    font-size: 100%;
   }
   
   * {
@@ -19,7 +19,7 @@
   }
   
   h1 {
-    font-size: 5.4rem;
+    font-size: 3.4rem;
     color: #56a5eb;
     margin-bottom: 5rem;
   }
