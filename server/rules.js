@@ -1,15 +1,14 @@
-
-
-// constants
+// dataType constants
 var WORD_ANSWER = 0;
 var CHAT_MESSAGE = 1;
 var GAME_LOGIC = 2;
 
-// game logic constants
+// GAME_LOGIC gameState constants
 var WAITING_TO_START = 0;
 var GAME_START = 1;
 var GUESSING = 2;
 var GAME_RESTART = 3;
+var GAME_OVER = 4;
 
 function User(socket) {
     this.socket = socket;
@@ -73,11 +72,7 @@ Room.prototype.handleUserMessages = function (user) {
         //construct the message
         var data = JSON.parse(message);
 
-        // check if the data is the word that was picked to be drawn
-        if (data.dataType === WORD_ANSWER) {
-            // make that word the current right answer
-            this.currentAnswer = data.message;
-        }
+
     });
 };
 
@@ -94,7 +89,6 @@ function GameRoom() {
         gameState: WAITING_TO_START
     };
 
-    console.log("sending game logic data");
     this.sendAll(JSON.stringify(gameLogicData));
 
 }
@@ -113,13 +107,19 @@ GameRoom.prototype.addUser = function (user) {
 
 GameRoom.prototype.handleUserMessages = function (user) {
     var room = this;
-    // gandle on message
+    // handle on message
     user.socket.on('message', function (message) {
 
         console.log("[GameRoom] Received message: " + message);
 
+
         var data = JSON.parse(message);
 
+        // check if the data is the word that was picked to be drawn
+        if (data.dataType === WORD_ANSWER) {
+            // make that word the current right answer
+            room.currentAnswer = data.message;
+        }
 
         // check if the message is guessing right or wrong
         if (data.dataType === CHAT_MESSAGE) {
@@ -130,28 +130,24 @@ GameRoom.prototype.handleUserMessages = function (user) {
                     + " (Answer: " + room.currentAnswer + ")");
             }
 
-            if (room.currentGameState === GAME_START && data.message === room.currentAnswer) {
+            if (room.currentGameState === GAME_START && data.message.toLowerCase() === room.currentAnswer.toLowerCase()) {
                 var gameLogicData = {
                     dataType: GAME_LOGIC,
-                    //gameState: GAME_OVER,
+                    gameState: GAME_OVER,
                     //winner: user.id,
                     answer: room.currentAnswer
                 };
 
                 room.sendAll(JSON.stringify(gameLogicData));
-
                 room.currentGameState = WAITING_TO_START;
-
-
             }
         }
 
-        
-        if (data.dataType === GAME_LOGIC) {
+        else if (data.dataType === GAME_LOGIC) {
 
             // check if its time to guess the drawing
-            if(data.gameState === GUESSING){
-                var guessingPlayer=room.users[(room.playerTurn + 1) % 2];
+            if (data.gameState === GUESSING) {
+                var guessingPlayer = room.users[(room.playerTurn + 1) % 2];
 
                 // datatype: game logic, gamestate: guessing, and video of the drawing
                 guessingPlayer.socket.send(JSON.stringify(data));
@@ -164,24 +160,25 @@ GameRoom.prototype.handleUserMessages = function (user) {
 
         }
 
-
-
     });
 };
 
 GameRoom.prototype.startGame = function () {
+    this.currentGameState = GAME_START;
 
     // pick a player to draw
     this.playerTurn = (this.playerTurn + 1) % 2;
+    console.log("Start Game with player " + this.playerTurn + "'s turn");
 
-    // game start for all players
-    var gameLogicForEveryone = {
+    // game start for guessing player
+    var gameLogicForGuessing = {
         dataType: GAME_LOGIC,
         gameState: GAME_START,
         isPlayerTurn: false,
     }
 
-    this.sendAll(JSON.stringify(gameLogicForEveryone));
+    var guessingPlayer = this.users[(this.playerTurn + 1) % 2];
+    guessingPlayer.socket.send(JSON.stringify(gameLogicForGuessing));
 
     // game start for drawing player
     var gameLogicForDrawer = {
@@ -192,6 +189,7 @@ GameRoom.prototype.startGame = function () {
 
     var player = this.users[this.playerTurn];
     player.socket.send(JSON.stringify(gameLogicForDrawer));
+    
 };
 
 module.exports.GameRoom = GameRoom;
