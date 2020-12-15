@@ -9,8 +9,8 @@ var port = 8000;
 
 server.on('connection', function(socket) {
   var user=new User(socket);
-  room1.addUser(user);
   console.log("A connection has been established");
+  room1.addUser(user);
 });
 
 console.log("WebSocket server is running.");

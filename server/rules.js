@@ -18,27 +18,38 @@ function Room() {
     this.users = [];
 }
 
-Room.prototype.addUser = function (user) {
-    this.users.push(user);
-    var room = this;
-    msg = "Welcome player " + this.users.length;
+Room.prototype.addUser = function (user,gameRoom) {
 
-    // saving welcome message
-    var data = {
-        message: msg
+    // handle too many players connecting
+    if (this.users.length == 2) {
+        user.socket.close();
+        console.log("disconnected, room has 2 players already");
     }
+    else {
+        this.users.push(user);
+        var room = this;
+        msg = "Welcome player " + this.users.length;
 
-    // secnding welcome message
-    room.sendAll(JSON.stringify(data));
+        // saving welcome message
+        var data = {
+            message: msg
+        }
+
+        // secnding welcome message
+        room.sendAll(JSON.stringify(data));
 
 
-    // handle user closing
-    user.socket.onclose = function () {
-        console.log('A connection left.');
-        room.removeUser(user);
+        // handle user closing
+        user.socket.onclose = function () {
+            console.log('A connection left.');
+            //switch room states so new game can be created
+            gameRoom.currentGameState = WAITING_TO_START;
+            room.removeUser(user);
+            console.log("Game State reset... Number of users: " + room.users.length)
+        }
+
+        this.handleUserMessages(user);
     }
-
-    this.handleUserMessages(user);
 };
 
 Room.prototype.removeUser = function (user) {
@@ -101,11 +112,15 @@ GameRoom.prototype = new Room();
 
 GameRoom.prototype.addUser = function (user) {
     // aka super(user)
-    Room.prototype.addUser.call(this, user);
+    gameRoom=this;
+    Room.prototype.addUser.call(this, user,gameRoom);
 
+    console.log("checking to see if game state is waiting: " + this.currentGameState + " and users length is 2: " + this.users.length);
     // start the game if there are 2 connections
-    if (this.currentGameState === WAITING_TO_START && this.users.length == 2)
+    if (this.currentGameState === WAITING_TO_START && this.users.length === 2){
         this.startGame();
+        
+    }
 }
 
 GameRoom.prototype.handleUserMessages = function (user) {
