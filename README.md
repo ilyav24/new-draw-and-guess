@@ -6,6 +6,8 @@ Draw & Guess game.
 
 To run:
 
+Install dependencies - $ npm install
+
 Go to server folder - $ cd server
 
 Run the server - $ node server.js
